@@ -1,5 +1,5 @@
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:sejoga2025_certo/models/beacon_location.dart';
+import '../models/beacon_location.dart';
 
 class BeaconService {
     final List<BeaconLocation> beaconLocations;

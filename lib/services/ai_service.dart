@@ -7,23 +7,19 @@ class AIService {
   AIService() {
     model = GenerativeModel(
       model: 'gemini-pro',
-      apiKey: ApiKey(AppConstants.aiApiKey), // Corrigido aqui
+      apiKey: AppConstants.aiApiKey,
     );
   }
 
   Future<String> getNavigationInstructions(String from, String to) async {
     final prompt = """
-Você é um assistente de navegação para deficientes visuais.
-Forneça instruções claras e concisas para ir de '$from' para '$to'.
-Use referências táteis, sonoras e distâncias aproximadas em passos.
-Seja específico sobre direções e pontos de referência.
-""";
+    Você é um assistente de navegação para deficientes visuais.
+    Forneça instruções claras e concisas para ir de '$from' para '$to'.
+    """;
 
-    try {
-      final response = await model.generateContent([Content.text(prompt)]);
-      return response.text ?? 'Não foi possível gerar instruções.';
-    } catch (e) {
-      return 'Erro ao conectar com o serviço de IA: $e';
-    }
+    final content = [Content.text(prompt)];
+    final response = await model.generateContent(content);
+
+    return response.text ?? 'Não foi possível gerar instruções.';
   }
 }

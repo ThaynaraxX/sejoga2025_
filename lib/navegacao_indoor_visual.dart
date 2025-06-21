@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/access_point.dart';
+import 'package:sejoga2025_certo/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
