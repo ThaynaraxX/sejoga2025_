@@ -1,16 +1,23 @@
-# sejoga2025_certo
+# Sejoga 2025 
 
-A new Flutter project.
+Aplicativo de navegação indoor acessível para pessoas com deficiência visual, desenvolvido com Flutter, é uma nova versão de um projeto anterior, recriado para fins de organização e atualização.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+### Tecnologias
+- Flutter
+- Bluetooth / Wi-Fi (localização)
+- Google Gemini API (IA)
+- Text-to-Speech (leitura por voz)
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Funcionalidades
+- Detecta localização por beacon ou Wi-Fi
+- Gera instruções de navegação com inteligência artificial
+- Leitura em voz das instruções
+- Interface acessível e simplificada
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+🔒 Projeto acadêmico - 2025
