@@ -24,6 +24,8 @@ Aplicativo de navegação indoor acessível para pessoas com deficiência visual
 
 ---
 
-### License
-This project is licensed under the [MIT License](LICENSE).
+### Licença
+
+Este projeto está licenciado sob os termos da [Licença MIT](LICENSE).
+
 
