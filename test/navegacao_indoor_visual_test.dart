@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../models/access_point.dart';
-import '../models/beacon_location.dart';
-import '../services/ai_service.dart';
-import '../services/beacon_service.dart';
-import '../services/localization_service.dart';
-import '../services/text_to_speech_service.dart';
-import '../services/wifi_service.dart';
-import '../utils/accessibility_utils.dart';
-import '../widgets/instruction_card.dart';
-import '../widgets/location_button.dart';
-
+import 'package:sejoga2025_certo/models/access_point.dart';
+import 'package:sejoga2025_certo/models/beacon_location.dart';
+import 'package:sejoga2025_certo/services/ai_service.dart';
+import 'package:sejoga2025_certo/services/beacon_service.dart';
+import 'package:sejoga2025_certo/services/localization_service.dart';
+import 'package:sejoga2025_certo/services/text_to_speech_service.dart';
+import 'package:sejoga2025_certo/services/wifi_service.dart';
+import 'package:sejoga2025_certo/utils/accessibility_utils.dart';
+import 'package:sejoga2025_certo/widgets/instruction_card.dart';
+import 'package:sejoga2025_certo/widgets/location_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

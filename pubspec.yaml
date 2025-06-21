@@ -15,6 +15,7 @@ dependencies:
   flutter_map: ^3.0.0
   latlong2: ^0.8.1
   permission_handler: ^10.2.0
+  flutter_blue_plus: ^1.15.3
   flutter_launcher_icons: ^0.13.1
   google_generative_ai:
     git:
