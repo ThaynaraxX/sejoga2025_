@@ -21,3 +21,9 @@ Aplicativo de navegação indoor acessível para pessoas com deficiência visual
 ---
 
 🔒 Projeto acadêmico - 2025
+
+---
+
+### License
+This project is licensed under the [MIT License](LICENSE).
+
