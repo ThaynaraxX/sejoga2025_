@@ -13,11 +13,12 @@ class BeaconService {
 
         await FlutterBluePlus.startScan(timeout: const Duration(seconds: 10));
 
-        var flutterBluePlus = FlutterBluePlus;
-        await for (ScanResult result in flutterBluePlus.scanResults) {
-            for (var beacon in beaconLocations) {
-                if (result.device.remoteId.toString() == beacon.id) {
-                    yield beacon;
+        await for (final results in FlutterBluePlus.scanResults) {
+            for (final result in results) {
+                for (final beacon in beaconLocations) {
+                    if (result.device.remoteId.toString() == beacon.id) {
+                        yield beacon;
+                    }
                 }
             }
         }
@@ -26,8 +27,4 @@ class BeaconService {
     Future<void> stopScan() async {
         await FlutterBluePlus.stopScan();
     }
-}
-
-extension on Type {
-  get scanResults => null;
 }

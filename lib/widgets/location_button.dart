@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/access_point.dart';
+import '../utils/accessibility_utils.dart';
 
 class LocationButton extends StatelessWidget {
   final String locationName;
