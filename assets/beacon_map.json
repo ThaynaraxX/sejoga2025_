@@ -1,0 +1,23 @@
+[
+  {
+    "id": "BEACON_1",
+    "name": "Entrada Principal",
+    "description": "Perto da porta de entrada",
+    "xPosition": 0.0,
+    "yPosition": 0.0
+  },
+  {
+    "id": "BEACON_2",
+    "name": "Banheiro",
+    "description": "Banheiro masculino no corredor direito",
+    "xPosition": 10.0,
+    "yPosition": 5.0
+  },
+  {
+    "id": "BEACON_3",
+    "name": "Sala de Reuniões",
+    "description": "Sala com mesa grande",
+    "xPosition": 15.0,
+    "yPosition": 8.0
+  }
+]

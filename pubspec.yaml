@@ -1,0 +1,37 @@
+name: sejoga2025_certo
+description: Projeto migrado do repositório original
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.18.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  flutter_tts: ^3.5.2
+  geolocator: ^9.0.2
+  flutter_map: ^3.0.0
+  latlong2: ^0.8.1
+  permission_handler: ^10.2.0
+  flutter_launcher_icons: ^0.13.1
+  google_generative_ai:
+    git:
+      url: https://github.com/google/generative-ai-dart.git
+      ref: main
+
+
+dependency_overrides:
+  http: ^0.13.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/beacon_map.json
+    - assets/wifi_map.json
