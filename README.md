@@ -7,14 +7,14 @@ Aplicativo de navegação indoor acessível para pessoas com deficiência visual
 ### Tecnologias
 - Flutter
 - Bluetooth / Wi-Fi (localização)
-- Google Gemini API (IA)
+- Agentic Application (backend em AWS)
 - Text-to-Speech (leitura por voz)
 
 ---
 
 ### Funcionalidades
 - Detecta localização por beacon ou Wi-Fi
-- Gera instruções de navegação com inteligência artificial
+- Gera instruções de navegação via backend inteligente
 - Leitura em voz das instruções
 - Interface acessível e simplificada
 
