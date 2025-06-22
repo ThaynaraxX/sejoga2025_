@@ -1,25 +1,17 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
-import '../utils/constants.dart';
 
 class AIService {
-  late final GenerativeModel model;
-
-  AIService() {
-    model = GenerativeModel(
-      model: 'gemini-pro',
-      apiKey: AppConstants.aiApiKey,
-    );
-  }
+  final _model = GenerativeModel(
+    model: 'gemini-pro',
+    apiKey: 'AIzaSyDqAX0rvw7ogg2h8KAY2hZzlk9h6Xcsku8',
+  );
 
   Future<String> getNavigationInstructions(String from, String to) async {
-    final prompt = """
-    Você é um assistente de navegação para deficientes visuais.
-    Forneça instruções claras e concisas para ir de '$from' para '$to'.
-    """;
+    final prompt = 'Quais instruções simples eu posso dar para ir de "$from" até "$to"?';
+    final response = await _model.generateContent([
+      Content.text(prompt),
+    ]);
 
-    final content = [Content.text(prompt)];
-    final response = await model.generateContent(content);
-
-    return response.text ?? 'Não foi possível gerar instruções.';
+    return response.text ?? 'Nenhuma instrução encontrada.';
   }
 }

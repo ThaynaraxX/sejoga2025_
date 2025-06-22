@@ -1,26 +1,43 @@
 name: sejoga2025_certo
-description: Aplicativo de navegação indoor para pessoas com deficiência visual.
+description: Aplicativo de navegação indoor acessível
+
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.2.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  flutter_tts: ^4.0.2
-  flutter_blue_plus: ^1.40.5
-  permission_handler: ^12.0.0+1
-  google_generative_ai: ^0.4.7
+  # Detecção Bluetooth
+  flutter_blue_plus: ^1.35.5
+
+  # Texto para fala
+  flutter_tts: ^3.8.3
+
+  # Requisições HTTP
+  http: ^1.4.0
+
+  # Google Generative AI (IA)
+  google_generative_ai: ^0.2.2
+
+  # Acessibilidade (sem dependência externa, mas pode adicionar mais)
+  cupertino_icons: ^1.0.6
+
+  # Scan de Wi-Fi
+  wifi_scan: ^0.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_lints: ^3.0.1
+
 flutter:
   uses-material-design: true
+
   assets:
-    - assets/beacon_map.json
-    - assets/wifi_map.json
+    - assets/beacons.json
+    - assets/access_points.json

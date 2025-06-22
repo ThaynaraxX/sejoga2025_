@@ -7,24 +7,21 @@ class BeaconService {
     BeaconService({required this.beaconLocations});
 
     Stream<BeaconLocation> scanBeacons() async* {
-        await FlutterBluePlus.adapterState
-            .where((state) => state == BluetoothAdapterState.on)
-            .first;
+        await FlutterBluePlus.startScan(timeout: const Duration(seconds: 4));
 
-        await FlutterBluePlus.startScan(timeout: const Duration(seconds: 10));
-
-        await for (final results in FlutterBluePlus.scanResults) {
-            for (final result in results) {
-                for (final beacon in beaconLocations) {
-                    if (result.device.remoteId.toString() == beacon.id) {
-                        yield beacon;
-                    }
-                }
+        await for (var scanResult in FlutterBluePlus.scanResults) {
+            for (var result in scanResult) {
+                final beacon = beaconLocations.firstWhere(
+                        (b) => result.device.name == b.id,
+                    orElse: () => BeaconLocation(id: '0', name: 'Desconhecido'),
+                );
+                yield beacon;
+                return; // interrompe após o primeiro achado
             }
         }
     }
 
-    Future<void> stopScan() async {
-        await FlutterBluePlus.stopScan();
+    void stopScan() {
+        FlutterBluePlus.stopScan();
     }
 }

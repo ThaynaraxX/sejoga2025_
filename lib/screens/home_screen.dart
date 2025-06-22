@@ -51,12 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
     if (selectedMethod == 'bluetooth') {
       final beacon = await beaconService.scanBeacons().first;
       setState(() => currentLocation = beacon.name);
-      _getInstructions('Posição atual', beacon.name);
+      await _getInstructions('Posição atual', beacon.name);
     } else {
       final aps = await wifiService.scanWifiNetworks();
       if (aps.isNotEmpty) {
-        setState(() => currentLocation = 'Perto do ${aps[0].ssid}');
-        _getInstructions('Posição atual', 'Perto do ${aps[0].ssid}');
+        final location = 'Perto do ${aps[0].ssid}';
+        setState(() => currentLocation = location);
+        await _getInstructions('Posição atual', location);
       }
     }
   }
@@ -66,60 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => currentInstruction = instructions);
     await ttsService.speak(instructions);
     AccessibilityUtils.announce(context, instructions);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Navegação Indoor'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: _showMethodDialog,
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              InstructionCard(
-                instruction: currentInstruction,
-                onTap: () => ttsService.speak(currentInstruction),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Método: ${selectedMethod == 'bluetooth' ? 'Bluetooth' : 'WiFi'}',
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Localização: $currentLocation',
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _detectLocation,
-                child: const Text('Detectar Localização Atual'),
-              ),
-              const SizedBox(height: 20),
-              ...beaconLocations.map(
-                    (location) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: LocationButton(
-                    locationName: location.name,
-                    onPressed: () =>
-                        _getInstructions(currentLocation, location.name),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Future<void> _showMethodDialog() async {
@@ -145,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    if (method != null) {
+    if (method != null && method != selectedMethod) {
       setState(() => selectedMethod = method);
     }
   }
@@ -155,5 +102,56 @@ class _HomeScreenState extends State<HomeScreen> {
     beaconService.stopScan();
     ttsService.stop();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Navegação Indoor'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: _showMethodDialog,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            InstructionCard(
+              instruction: currentInstruction,
+              onTap: () => ttsService.speak(currentInstruction),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Método: ${selectedMethod == 'bluetooth' ? 'Bluetooth' : 'WiFi'}',
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Localização: $currentLocation',
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: _detectLocation,
+              child: const Text('Detectar Localização Atual'),
+            ),
+            const SizedBox(height: 20),
+            ...beaconLocations.map(
+                  (location) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: LocationButton(
+                  locationName: location.name,
+                  onPressed: () => _getInstructions(currentLocation, location.name),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

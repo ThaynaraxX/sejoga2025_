@@ -1,16 +1,15 @@
 import 'package:flutter/services.dart';
-import '../models/access_point.dart';
+import 'package:sejoga2025_certo/models/access_point.dart';
 
 class WifiService {
-  static const platform = MethodChannel('com.example.navegacao_indoor/wifi');
+  static const MethodChannel _channel = MethodChannel('wifi_service');
 
   Future<List<AccessPoint>> scanWifiNetworks() async {
     try {
-      final List<dynamic> result = 
-          await platform.invokeMethod('scanWifiNetworks');
-      return result.map((ap) => AccessPoint.fromJson(ap)).toList();
+      final List result = await _channel.invokeMethod('scanWifi');
+      return result.map((e) => AccessPoint.fromJson(Map<String, dynamic>.from(e))).toList();
     } on PlatformException catch (e) {
-      print("Failed to scan WiFi: ${e.message}");
+      print('Erro ao escanear Wi-Fi: ${e.message}');
       return [];
     }
   }

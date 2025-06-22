@@ -1,7 +1,7 @@
 class AccessPoint {
   final String ssid;
   final String bssid;
-  final double signalLevel;
+  final int signalLevel;
 
   AccessPoint({
     required this.ssid,
@@ -11,9 +11,9 @@ class AccessPoint {
 
   factory AccessPoint.fromJson(Map<String, dynamic> json) {
     return AccessPoint(
-      ssid: json['ssid'],
-      bssid: json['bssid'],
-      signalLevel: json['signalLevel'].toDouble(),
+      ssid: json['ssid'] as String,
+      bssid: json['bssid'] as String,
+      signalLevel: json['signalLevel'] as int,
     );
   }
 }

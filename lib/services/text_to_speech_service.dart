@@ -1,16 +1,18 @@
 import 'package:flutter_tts/flutter_tts.dart';
 
 class TextToSpeechService {
-    final FlutterTts tts = FlutterTts();
+    final FlutterTts _tts = FlutterTts();
+
+    TextToSpeechService() {
+        _tts.setLanguage('pt-BR');
+        _tts.setSpeechRate(0.9);
+    }
 
     Future<void> speak(String text) async {
-        await tts.setLanguage('pt-BR');
-        await tts.setPitch(1.0);
-        await tts.setSpeechRate(0.5);
-        await tts.speak(text);
+        await _tts.speak(text);
     }
 
     Future<void> stop() async {
-        await tts.stop();
+        await _tts.stop();
     }
 }
