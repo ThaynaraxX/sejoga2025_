@@ -19,6 +19,17 @@ Aplicativo de navegação indoor acessível para pessoas com deficiência visual
 - Interface acessível e simplificada
 
 ---
+### Configuração da chave da IA
+
+Para que o app gere instruções utilizando o Gemini, informe a chave de API do Google Generative AI ao executar o aplicativo:
+
+```bash
+flutter run --dart-define=AI_API_KEY=SEU_TOKEN
+```
+
+Substitua `SEU_TOKEN` pela sua chave. Se a chave não for fornecida, o aplicativo exibirá uma mensagem informando a ausência da configuração.
+
+---
 
 🔒 Projeto acadêmico - 2025
 
