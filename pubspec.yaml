@@ -22,7 +22,7 @@ dependencies:
   http: ^1.4.0
 
   # Google Generative AI (IA)
-  google_generative_ai: ^0.2.2
+  google_generative_ai: ^0.4.3
 
   # Acessibilidade (sem dependência externa, mas pode adicionar mais)
   cupertino_icons: ^1.0.6

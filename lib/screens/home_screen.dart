@@ -45,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
     beaconLocations = await localizationService.loadBeaconLocations();
     accessPoints = await localizationService.loadAccessPoints();
     beaconService = BeaconService(beaconLocations: beaconLocations);
-
     if (mounted) {
       setState(() {});
     }
@@ -114,10 +113,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lumen'),
+        title: const Text('Navegação Indoor'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
+            tooltip: 'Configurações',
             onPressed: () {
               ttsService.speak('Configurações');
               _showMethodDialog();
