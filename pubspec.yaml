@@ -3,6 +3,7 @@ description: Aplicativo de navegação indoor acessível
 
 publish_to: 'none'
 version: 1.0.0+1
+license: MIT
 
 environment:
   sdk: ">=3.2.0 <4.0.0"

@@ -45,6 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
     beaconLocations = await localizationService.loadBeaconLocations();
     accessPoints = await localizationService.loadAccessPoints();
     beaconService = BeaconService(beaconLocations: beaconLocations);
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _detectLocation() async {
@@ -94,6 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (method != null && method != selectedMethod) {
       setState(() => selectedMethod = method);
+      await ttsService.speak(
+          'Método selecionado: ${method == 'bluetooth' ? 'Bluetooth' : 'Wi-Fi'}');
     }
   }
 
@@ -108,11 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Navegação Indoor'),
+        title: const Text('Lumen'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: _showMethodDialog,
+            onPressed: () {
+              ttsService.speak('Configurações');
+              _showMethodDialog();
+            },
           ),
         ],
       ),
@@ -136,7 +145,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: _detectLocation,
+              onPressed: () async {
+                await ttsService.speak('Detectar Localização Atual');
+                await _detectLocation();
+              },
               child: const Text('Detectar Localização Atual'),
             ),
             const SizedBox(height: 20),
@@ -145,7 +157,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: LocationButton(
                   locationName: location.name,
-                  onPressed: () => _getInstructions(currentLocation, location.name),
+                  onPressed: () async {
+                    await ttsService.speak(location.name);
+                    await _getInstructions(currentLocation, location.name);
+                  },
                 ),
               ),
             ),

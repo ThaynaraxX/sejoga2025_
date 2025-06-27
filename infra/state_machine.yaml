@@ -1,0 +1,25 @@
+Comment: "Fluxo de transcricao e sintetizacao"
+StartAt: Transcribe
+States:
+  Transcribe:
+    Type: Task
+    Resource: arn:aws:states:::lambda:invoke
+    Parameters:
+      FunctionName: ${TranscribeFunctionArn}
+      Payload.$: $.
+    Next: AgenticApplication
+  AgenticApplication:
+    Type: Task
+    Resource: arn:aws:states:::lambda:invoke
+    Parameters:
+      FunctionName: ${AgenticApplicationFunctionArn}
+      Payload.$: $.
+    Next: Polly
+  Polly:
+    Type: Task
+    Resource: arn:aws:states:::lambda:invoke
+    Parameters:
+      FunctionName: ${PollyFunctionArn}
+      Payload.$: $.
+    ResultPath: $.audio
+    End: true

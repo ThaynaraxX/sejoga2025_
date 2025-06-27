@@ -2,19 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 
 class AccessibilityUtils {
-  /// Anuncia uma mensagem usando os serviços de acessibilidade do sistema
+  /// Anuncia uma mensagem usando os serviços de acessibilidade do sistema.
+  /// Ideal para feedback falado imediato.
   static void announce(BuildContext context, String message) {
     SemanticsService.announce(
       message,
-      TextDirection.ltr,
+      Directionality.of(context), // usa a direção atual da UI
     );
   }
 
-  /// Retorna um widget de texto com suporte para leitores de tela
-  static Widget accessibleText(String text, {TextStyle? style}) {
+  /// Retorna um widget de texto acessível com opção de customizar o que será falado
+  static Widget accessibleText(
+      String visualText, {
+        TextStyle? style,
+        String? semanticsLabel,
+        TextDirection textDirection = TextDirection.ltr,
+      }) {
     return Semantics(
-      label: text,
-      child: Text(text, style: style),
+      label: semanticsLabel ?? visualText,
+      textDirection: textDirection,
+      child: ExcludeSemantics(
+        child: Text(
+          visualText,
+          style: style,
+        ),
+      ),
     );
   }
 }
+
