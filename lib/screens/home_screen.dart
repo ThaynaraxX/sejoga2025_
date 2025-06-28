@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import '../models/access_point.dart';
 import '../models/beacon_location.dart';
 import '../services/ai_service.dart';
@@ -10,6 +10,7 @@ import '../services/wifi_service.dart';
 import '../utils/accessibility_utils.dart';
 import '../widgets/instruction_card.dart';
 import '../widgets/location_button.dart';
+import '../services/stt_service.dart'; // Adicione esta linha
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,12 +25,16 @@ class _HomeScreenState extends State<HomeScreen> {
   late final LocalizationService localizationService;
   late final WifiService wifiService;
   late BeaconService beaconService;
+  late final STTService sttService; // Adicione esta linha
 
   String currentInstruction = 'Toque para começar a navegação';
   String currentLocation = 'Local desconhecido';
   String selectedMethod = 'bluetooth';
   List<BeaconLocation> beaconLocations = [];
   List<AccessPoint> accessPoints = [];
+
+  bool _isRecording = false; // Adicione esta linha para controlar o estado da gravação
+  String _transcribedText = ''; // Adicione esta linha para armazenar o texto transcrito
 
   @override
   void initState() {
@@ -38,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ttsService = TextToSpeechService();
     localizationService = LocalizationService();
     wifiService = WifiService();
+    sttService = STTService(); // Inicialize o novo serviço STT aqui
     _initializeServices();
   }
 
@@ -45,19 +51,34 @@ class _HomeScreenState extends State<HomeScreen> {
     beaconLocations = await localizationService.loadBeaconLocations();
     accessPoints = await localizationService.loadAccessPoints();
     beaconService = BeaconService(beaconLocations: beaconLocations);
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _detectLocation() async {
-    if (selectedMethod == 'bluetooth') {
-      final beacon = await beaconService.scanBeacons().first;
-      setState(() => currentLocation = beacon.name);
-      await _getInstructions('Posição atual', beacon.name);
-    } else {
-      final aps = await wifiService.scanWifiNetworks();
-      if (aps.isNotEmpty) {
-        final location = 'Perto do ${aps[0].ssid}';
+    final status = await Permission.location.request();
+
+    if (!status.isGranted) {
+      await ttsService.speak('Permissão de localização negada. Por favor, permita nas configurações.');
+      setState(() => currentLocation = 'Permissão negada');
+      return;
+    }
+
+    final aps = await wifiService.scanWifiNetworks();
+    print('REDES ENCONTRADAS: ${aps.map((e) => e.bssid).toList()}');
+
+    for (final ap in aps) {
+      final matches = accessPoints.where(
+            (a) => a.bssid.toLowerCase() == ap.bssid.toLowerCase(),
+      ).toList();
+
+      if (matches.isNotEmpty) {
+        final match = matches.first;
+        final location = match.room ?? 'Perto do ${match.ssid}';
         setState(() => currentLocation = location);
         await _getInstructions('Posição atual', location);
+        break;
       }
     }
   }
@@ -94,13 +115,54 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (method != null && method != selectedMethod) {
       setState(() => selectedMethod = method);
+      await ttsService.speak(
+        'Método selecionado: ${method == 'bluetooth' ? 'Bluetooth' : 'Wi-Fi'}',
+      );
     }
+  }
+
+  // FUNÇÃO _toggleRecording MOVIDA PARA O LOCAL CORRETO DENTRO DA CLASSE _HomeScreenState
+  Future<void> _toggleRecording() async {
+    if (_isRecording) {
+      // Parar gravação e transcrever
+      final String? text = await sttService.stopRecordingAndTranscribe();
+      if (text != null) {
+        setState(() {
+          _transcribedText = text;
+          currentInstruction = 'Texto Transcrito: $text'; // Atualiza a instrução principal
+          // Aqui você passaria o 'text' para o seu AIService para obter instruções
+          _getInstructions(currentLocation, text); // Adapte para o seu AIService
+        });
+        AccessibilityUtils.announce(context, 'Transcrição: $text');
+      } else {
+        setState(() {
+          currentInstruction = 'Não foi possível transcrever.';
+        });
+      }
+    } else {
+      // Iniciar gravação
+      final String? path = await sttService.startRecording();
+      if (path != null) {
+        setState(() {
+          currentInstruction = 'Gravando... Fale seu comando.';
+        });
+        AccessibilityUtils.announce(context, 'Gravando. Fale seu comando.');
+      } else {
+        setState(() {
+          currentInstruction = 'Erro ao iniciar gravação.';
+        });
+      }
+    }
+    setState(() {
+      _isRecording = !_isRecording;
+    });
   }
 
   @override
   void dispose() {
     beaconService.stopScan();
     ttsService.stop();
+    sttService.dispose(); // Não esqueça de liberar os recursos do gravador!
     super.dispose();
   }
 
@@ -108,11 +170,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Navegação Indoor'),
+        title: const Text('Lumen'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: _showMethodDialog,
+            tooltip: 'Configurações',
+            onPressed: () {
+              ttsService.speak('Configurações');
+              _showMethodDialog();
+            },
           ),
         ],
       ),
@@ -135,17 +201,42 @@ class _HomeScreenState extends State<HomeScreen> {
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 30),
+            // Botão "Detectar Localização Atual" - REMOVIDA A DUPLICAÇÃO
             ElevatedButton(
-              onPressed: _detectLocation,
+              onPressed: () async {
+                await ttsService.speak('Detectar Localização Atual');
+                await _detectLocation();
+              },
               child: const Text('Detectar Localização Atual'),
             ),
             const SizedBox(height: 20),
+            // Botão para iniciar/parar gravação
+            ElevatedButton(
+              onPressed: _toggleRecording,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _isRecording ? Colors.red : Colors.green,
+              ),
+              child: Text(_isRecording ? 'Parar Gravação e Transcrever' : 'Iniciar Comando de Voz'),
+            ),
+            if (_transcribedText.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              Text(
+                'Último Comando Transcrito: "$_transcribedText"',
+                style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+              ),
+            ],
+            const SizedBox(height: 20),
+            // Lista de botões de localização - REMOVIDA A DUPLICAÇÃO
             ...beaconLocations.map(
-                  (location) => Padding(
+              (location) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: LocationButton(
                   locationName: location.name,
-                  onPressed: () => _getInstructions(currentLocation, location.name),
+                  onPressed: () async {
+                    await ttsService.speak(location.name);
+                    await _getInstructions(currentLocation, location.name);
+                  },
                 ),
               ),
             ),

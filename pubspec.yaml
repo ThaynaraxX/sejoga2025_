@@ -3,6 +3,7 @@ description: Aplicativo de navegação indoor acessível
 
 publish_to: 'none'
 version: 1.0.0+1
+license: MIT
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
@@ -11,17 +12,19 @@ dependencies:
   flutter:
     sdk: flutter
 
+  permission_handler: ^11.4.0 # Já existe, mas certifique-se da versão
+  record: ^0.6.0 # Adicione esta linha
+  path_provider: ^2.1.3 # Adicione esta linha
+  http: ^1.4.0 # Já existe, mas certifique-se da versão
+
   # Detecção Bluetooth
   flutter_blue_plus: ^1.35.5
 
   # Texto para fala
   flutter_tts: ^3.8.3
 
-  # Requisições HTTP
-  http: ^1.4.0
-
   # Google Generative AI (IA)
-  google_generative_ai: ^0.2.2
+  google_generative_ai: ^0.4.3
 
   # Acessibilidade (sem dependência externa, mas pode adicionar mais)
   cupertino_icons: ^1.0.6
