@@ -10,16 +10,15 @@ class AIService {
       ? GenerativeModel(
     // *** ALTERAÇÃO PRINCIPAL AQUI ***
     // Voltamos para o nome de modelo mais universal.
-    model: 'gemini-pro',
+    model: 'gemini-1.5-pro-latest',
     apiKey: AppConstants.aiApiKey,
   )
       : null;
 
   Future<String> getNavigationInstructions(String from, String to) async {
-    if (_model == null) {
-      return 'Erro: A chave da API não foi encontrada no arquivo constants.dart.';
-    }
-
+      if (_model == null) {
+        return 'Erro: modelo de IA não inicializado.';
+      }
     final prompt =
         'Em português, dê instruções de navegação curtas e claras para deficientes visuais irem de "$from" até "$to".';
 
