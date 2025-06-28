@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   permission_handler: ^11.4.0 # Já existe, mas certifique-se da versão
-  record: ^0.6.0 # Adicione esta linha
+  record: ^6.0.0 # Altere esta linha!
   path_provider: ^2.1.3 # Adicione esta linha
   http: ^1.4.0 # Já existe, mas certifique-se da versão
 
