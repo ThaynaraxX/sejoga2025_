@@ -1,12 +1,21 @@
 [
   {
-    "bssid": "00:11:22:33:44:55",
-    "ssid": "WiFi_Andar1",
-    "signalLevel": -50
+    "ssid": "Keny",
+    "bssid": "a8:6e:84:f0:12:98",
+    "signalLevel": -50,
+    "room": "Entrada Principal"
   },
   {
-    "bssid": "AA:BB:CC:DD:EE:FF",
-    "ssid": "WiFi_Andar2",
-    "signalLevel": -60
+    "ssid": "Keny",
+    "bssid": "a8:6e:84:5d:d9:0a",
+    "signalLevel": -60,
+    "room": "Banheiro"
+  },
+  {
+    "ssid": "Keny",
+    "bssid": "aa:6e:84:40:12:98",
+    "signalLevel": -70,
+    "room": "Sala de Reuniões"
   }
 ]
+

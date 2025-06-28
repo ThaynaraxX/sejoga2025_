@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import '../models/access_point.dart';
 import '../models/beacon_location.dart';
 import '../services/ai_service.dart';
@@ -51,16 +51,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _detectLocation() async {
-    if (selectedMethod == 'bluetooth') {
-      final beacon = await beaconService.scanBeacons().first;
-      setState(() => currentLocation = beacon.name);
-      await _getInstructions('Posição atual', beacon.name);
-    } else {
-      final aps = await wifiService.scanWifiNetworks();
-      if (aps.isNotEmpty) {
-        final location = 'Perto do ${aps[0].ssid}';
+    final status = await Permission.location.request();
+
+    if (!status.isGranted) {
+      await ttsService.speak('Permissão de localização negada. Por favor, permita nas configurações.');
+      setState(() => currentLocation = 'Permissão negada');
+      return;
+    }
+
+    final aps = await wifiService.scanWifiNetworks();
+    print('REDES ENCONTRADAS: ${aps.map((e) => e.bssid).toList()}');
+
+    for (final ap in aps) {
+      final matches = accessPoints.where(
+            (a) => a.bssid.toLowerCase() == ap.bssid.toLowerCase(),
+      ).toList();
+
+      if (matches.isNotEmpty) {
+        final match = matches.first;
+        final location = match.room ?? 'Perto do ${match.ssid}';
         setState(() => currentLocation = location);
         await _getInstructions('Posição atual', location);
+        break;
       }
     }
   }
@@ -98,7 +110,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (method != null && method != selectedMethod) {
       setState(() => selectedMethod = method);
       await ttsService.speak(
-          'Método selecionado: ${method == 'bluetooth' ? 'Bluetooth' : 'Wi-Fi'}');
+        'Método selecionado: ${method == 'bluetooth' ? 'Bluetooth' : 'Wi-Fi'}',
+      );
     }
   }
 

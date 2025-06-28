@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:sejoga2025_certo/models/access_point.dart';
+import '../models/access_point.dart';
 
 class WifiService {
   static const MethodChannel _channel = MethodChannel('wifi_service');
